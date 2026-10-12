@@ -1,0 +1,129 @@
+{
+  "format": "flowcreator",
+  "schemaVersion": 2,
+  "id": "fixture-frame-edges",
+  "title": "枠のまわりの線",
+  "createdAt": "2026-10-01T00:00:00.000Z",
+  "updatedAt": "2026-10-01T00:00:00.000Z",
+  "settings": {
+    "direction": "TB"
+  },
+  "nodes": [
+    {
+      "id": "src",
+      "kind": "process",
+      "title": "キックオフ",
+      "position": {
+        "x": 320,
+        "y": 0
+      }
+    },
+    {
+      "id": "m1",
+      "kind": "process",
+      "title": "ビジョン共有",
+      "groupId": "g1",
+      "position": {
+        "x": 0,
+        "y": 200
+      }
+    },
+    {
+      "id": "m2",
+      "kind": "process",
+      "title": "質疑応答",
+      "groupId": "g1",
+      "position": {
+        "x": 0,
+        "y": 320
+      }
+    },
+    {
+      "id": "top",
+      "kind": "process",
+      "title": "受付",
+      "position": {
+        "x": 640,
+        "y": 40
+      }
+    },
+    {
+      "id": "k1",
+      "kind": "process",
+      "title": "基本講座",
+      "groupId": "g2",
+      "position": {
+        "x": 640,
+        "y": 200
+      }
+    },
+    {
+      "id": "k2",
+      "kind": "process",
+      "title": "演習",
+      "groupId": "g2",
+      "position": {
+        "x": 640,
+        "y": 320
+      }
+    },
+    {
+      "id": "k3",
+      "kind": "process",
+      "title": "まとめ",
+      "groupId": "g2",
+      "position": {
+        "x": 640,
+        "y": 440
+      }
+    },
+    {
+      "id": "after",
+      "kind": "end",
+      "title": "懇親会",
+      "position": {
+        "x": 640,
+        "y": 620
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "into-first",
+      "source": "src",
+      "target": "m1"
+    },
+    {
+      "id": "m1m2",
+      "source": "m1",
+      "target": "m2"
+    },
+    {
+      "id": "k1k2",
+      "source": "k1",
+      "target": "k2"
+    },
+    {
+      "id": "k2k3",
+      "source": "k2",
+      "target": "k3"
+    },
+    {
+      "id": "around",
+      "source": "top",
+      "target": "after"
+    }
+  ],
+  "groups": [
+    {
+      "id": "g1",
+      "title": "全体オリエンテーション",
+      "summary": "全体の方針を共有する"
+    },
+    {
+      "id": "g2",
+      "title": "1日目（午前）",
+      "summary": "初日の講座"
+    }
+  ]
+}

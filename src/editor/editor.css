@@ -1,0 +1,323 @@
+/* エディタ専用（ビューアには入らない） */
+.fc-field {
+  display: block;
+  margin-bottom: 14px;
+}
+
+.fc-field-label {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.fc-field-hint {
+  font-weight: 400;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.fc-field-counter {
+  margin-left: auto;
+  font-weight: 400;
+  font-size: 11px;
+}
+
+.fc-field-counter.is-over {
+  color: var(--warn);
+}
+
+.fc-field input,
+.fc-field textarea,
+.fc-link-row input {
+  display: block;
+  width: 100%;
+  padding: 7px 9px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  outline: none;
+  line-height: 1.5;
+}
+
+.fc-field textarea {
+  resize: vertical;
+  min-height: 2.6em;
+}
+
+.fc-field input:focus,
+.fc-field textarea:focus,
+.fc-link-row input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.fc-kind-switch {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  margin-bottom: 16px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+
+.fc-kind-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 2px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.fc-kind-option.is-active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12);
+}
+
+.fc-kind-option.is-active .fc-kind-icon {
+  border-color: var(--accent);
+}
+
+.fc-links-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.fc-link-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 32px;
+  gap: 4px;
+  width: 100%;
+}
+
+.fc-field-adder-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fc-add-wrap {
+  position: relative;
+}
+
+.fc-drag-kind {
+  cursor: grab;
+}
+
+.fc-membership {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.fc-library {
+  width: min(560px, calc(100% - 32px));
+}
+
+.fc-library-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fc-library-header h2 {
+  margin: 0;
+}
+
+.fc-library-note {
+  margin: 6px 0 12px;
+  font-size: 12px;
+}
+
+.fc-library-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+}
+
+.fc-library-list li {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.fc-library-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.fc-library-open:hover,
+.fc-library-open:focus-visible {
+  background: var(--surface-2);
+  outline: none;
+}
+
+.fc-library-title {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fc-library-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.fc-library-badge {
+  margin-right: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.fc-topbar.is-right .fc-icon-button {
+  width: 28px;
+  height: 28px;
+}
+
+.fc-path {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  overflow-wrap: anywhere;
+}
+
+/* ───────── Claude Code のターミナル（右に並べ、フローの画面は左に縮める） ───────── */
+.fc-layout {
+  display: flex;
+}
+
+.fc-main {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}
+
+.fc-terminal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 44%;
+  min-width: 320px;
+  max-width: 75vw;
+  height: 100%;
+  background: #1d1f23;
+  border-left: 1px solid var(--border);
+}
+
+.fc-terminal.is-hidden {
+  display: none;
+}
+
+.fc-terminal-resize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -4px;
+  width: 8px;
+  cursor: col-resize;
+  z-index: 2;
+}
+
+.fc-terminal-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 8px 8px 14px;
+  color: #e6e8eb;
+  font-size: 13px;
+  border-bottom: 1px solid #2c3036;
+}
+
+.fc-terminal-status {
+  font-size: 12px;
+  color: #9aa1ab;
+}
+
+.fc-terminal-button {
+  border: 1px solid #3a3f48;
+  border-radius: 6px;
+  background: transparent;
+  color: #e6e8eb;
+  font-size: 12px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.fc-terminal-button:hover {
+  background: #2a2e35;
+}
+
+.fc-terminal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #9aa1ab;
+  cursor: pointer;
+}
+
+.fc-terminal-icon:hover {
+  background: #2a2e35;
+  color: #e6e8eb;
+}
+
+.fc-terminal-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.fc-terminal-body {
+  flex: 1;
+  min-height: 0;
+  padding: 6px 4px 4px 10px;
+}
+
+/* 狭い画面ではターミナルを全面に重ねる */
+@media (max-width: 760px) {
+  .fc-terminal {
+    position: absolute;
+    inset: 0;
+    width: auto !important;
+    max-width: none;
+    z-index: 40;
+  }
+}

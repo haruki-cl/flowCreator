@@ -1,0 +1,25 @@
+{
+  "format": "flowcreator",
+  "schemaVersion": 2,
+  "id": "fixture-shared-track",
+  "title": "同じ所を通る線",
+  "createdAt": "2026-10-01T00:00:00.000Z",
+  "updatedAt": "2026-10-01T00:00:00.000Z",
+  "settings": { "direction": "TB" },
+  "nodes": [
+    { "id": "a", "kind": "process", "title": "A", "position": { "x": -150, "y": 0 } },
+    { "id": "b", "kind": "process", "title": "B", "position": { "x": 150, "y": 0 } },
+    { "id": "c", "kind": "process", "title": "C", "position": { "x": 0, "y": 200 } },
+    { "id": "d", "kind": "decision", "title": "判定", "position": { "x": -12, "y": 340 } },
+    { "id": "e", "kind": "process", "title": "E", "position": { "x": -200, "y": 560 } },
+    { "id": "f", "kind": "process", "title": "F", "position": { "x": 200, "y": 560 } }
+  ],
+  "edges": [
+    { "id": "ac", "source": "a", "target": "c" },
+    { "id": "bc", "source": "b", "target": "c" },
+    { "id": "cd", "source": "c", "target": "d" },
+    { "id": "de", "source": "d", "target": "e", "label": "Yes" },
+    { "id": "df", "source": "d", "target": "f", "label": "No" }
+  ],
+  "groups": []
+}

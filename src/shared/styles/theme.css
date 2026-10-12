@@ -1,0 +1,1024 @@
+/* モノトーン基調。アクセント色は選択状態の 1 色だけ */
+:root {
+  --bg: #f7f7f8;
+  --dot: #d9dbe0;
+  --surface: #ffffff;
+  --surface-2: #f2f3f5;
+  --border: #d0d4da;
+  --border-strong: #9aa1ab;
+  --text: #1f2328;
+  --text-muted: #6b7280;
+  --accent: #2f6feb;
+  --accent-soft: rgba(47, 111, 235, 0.12);
+  --warn: #b45309;
+  --danger: #c2410c;
+  --edge: #8a8f98;
+  --tooltip-bg: #1f2328;
+  --tooltip-text: #f7f7f8;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 4px 16px rgba(15, 23, 42, 0.08);
+  --frame-bg: rgba(15, 23, 42, 0.025);
+  --frame-border: #dde0e5;
+  /* 枠の中の色（背景 + --frame-bg）と同じ不透明色。名前の下を通る矢印を隠す */
+  --frame-label-bg: #f1f1f3;
+  --radius: 8px;
+  --font: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic UI', 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --frame-bg: rgba(255, 255, 255, 0.03);
+    --frame-border: #353b44;
+    --frame-label-bg: #1d1f23;
+    --bg: #16181c;
+    --dot: #2a2e35;
+    --surface: #1f2228;
+    --surface-2: #272b32;
+    --border: #3a3f48;
+    --border-strong: #5c636e;
+    --text: #e6e8eb;
+    --text-muted: #9aa1ab;
+    --accent: #6d9eff;
+    --accent-soft: rgba(109, 158, 255, 0.16);
+    --warn: #f0a44b;
+    --danger: #ff8a65;
+    --edge: #7c838d;
+    --tooltip-bg: #e6e8eb;
+    --tooltip-text: #16181c;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+.fc-app {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.fc-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* ───────── React Flow の上書き ───────── */
+.fc-canvas .react-flow {
+  --xy-background-color: var(--bg);
+  --xy-edge-stroke: var(--edge);
+  --xy-edge-stroke-selected: var(--accent);
+  --xy-edge-stroke-width: 1.5;
+  --xy-selection-background-color: var(--accent-soft);
+  --xy-selection-border: 1px dashed var(--accent);
+  --xy-node-boxshadow-selected: none;
+  --xy-node-boxshadow-hover: none;
+  --xy-background-pattern-color: var(--dot);
+  --xy-node-border-radius: 0;
+  background: var(--bg);
+}
+
+.fc-canvas .react-flow__node {
+  /* ノードの見た目は .fc-node 側で描く */
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.fc-canvas .react-flow__node:focus-visible {
+  outline: none;
+}
+
+.fc-canvas .react-flow__node:focus-visible .fc-node {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius);
+}
+
+/* 菱形は四角いフォーカス枠を出さず、外枠そのものを強調する */
+.fc-canvas .react-flow__node:focus-visible .fc-node.kind-decision {
+  outline: none;
+}
+
+.fc-canvas .react-flow__node:focus-visible .kind-decision .fc-diamond polygon {
+  stroke: var(--accent);
+  stroke-width: 2.5px;
+}
+
+.fc-canvas .react-flow__edge.selected .react-flow__edge-path {
+  stroke: var(--accent);
+}
+
+.fc-canvas .react-flow__attribution {
+  display: none;
+}
+
+/* ───────── ノード ───────── */
+.fc-node {
+  position: relative;
+  width: 176px;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.fc-node.kind-decision {
+  width: 200px;
+}
+
+.fc-shape {
+  position: relative;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.kind-start .fc-shape,
+.kind-end .fc-shape {
+  border-radius: 999px;
+  padding: 10px 20px;
+}
+
+.kind-end .fc-shape {
+  border-width: 2.5px;
+}
+
+.kind-decision .fc-shape {
+  min-height: 96px;
+  padding: 18px 44px;
+  background: transparent;
+  border: none;
+}
+
+.fc-diamond {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.fc-diamond polygon {
+  fill: var(--surface);
+  stroke: var(--border-strong);
+  stroke-width: 1.5px;
+  transition: stroke 120ms ease;
+}
+
+.fc-node.is-selected .fc-shape {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.fc-node.kind-decision.is-selected .fc-shape {
+  box-shadow: none;
+}
+
+.fc-node.is-selected .fc-diamond polygon {
+  stroke: var(--accent);
+  stroke-width: 2px;
+}
+
+.fc-content {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  text-align: center;
+}
+
+.fc-title {
+  font-weight: 600;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.fc-title.is-empty {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.fc-summary {
+  display: none;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+/* 「詳細あり」の小さな印。これ以外に詳細の存在を示すものは出さない */
+.fc-marker {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  box-shadow: 0 0 0 2px var(--bg);
+  pointer-events: none;
+}
+
+/* 角丸（開始・終了）は角の丸みの外に浮かないよう、上の辺の線の上に置く */
+.kind-start .fc-marker,
+.kind-end .fc-marker {
+  top: -3.5px;
+  right: 18px;
+}
+
+/*
+ * 菱形は外枠の上、右上の辺のちょうど中間に置く（四角の「右上の角」に当たる位置）。
+ * 頂点の近くだとハンドルや線のでっぱりに見え、内側だと外枠から浮いて見えるため。
+ * 拡大で菱形が縦に伸びても辺の中間に乗るよう、位置は割合で指定する
+ */
+.kind-decision .fc-marker {
+  top: 25%;
+  right: auto;
+  left: 75%;
+  transform: translate(-50%, -50%);
+}
+
+.fc-marker-inline {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  vertical-align: middle;
+}
+
+.fc-edge-label span + .fc-marker-inline {
+  margin-left: 5px;
+}
+
+/* 接続ハンドルはホバー中・接続中だけ見せる。ノードの枠より前面に置き、当たり判定は見た目より広くする */
+.fc-canvas .react-flow__handle.fc-handle {
+  z-index: 2;
+  width: 9px;
+  height: 9px;
+  background: var(--surface);
+  border: 1.5px solid var(--accent);
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.fc-canvas .react-flow__handle.fc-handle::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+}
+
+.fc-mode-edit .fc-node:hover .react-flow__handle.fc-handle,
+.fc-mode-edit .fc-node.is-connecting .react-flow__handle.fc-handle,
+.fc-mode-edit .fc-node.is-selected .react-flow__handle.fc-handle {
+  opacity: 1;
+}
+
+.fc-mode-view .react-flow__handle.fc-handle {
+  visibility: hidden;
+}
+
+.kind-decision .react-flow__handle-top {
+  top: 0;
+}
+
+.kind-decision .react-flow__handle-bottom {
+  bottom: 0;
+}
+
+.kind-decision .react-flow__handle-left {
+  left: 0;
+}
+
+.kind-decision .react-flow__handle-right {
+  right: 0;
+}
+
+/* ───────── セマンティックズーム（data-zoom-level で切り替え） ───────── */
+/* 俯瞰では見出しだけを 1 行で、縮小しても読めるよう少し大きく */
+.fc-canvas[data-zoom-level='0'] .fc-title {
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  font-size: 17px;
+}
+
+.fc-canvas[data-zoom-level='0'] .fc-marker,
+.fc-canvas[data-zoom-level='0'] .fc-marker-inline,
+.fc-canvas[data-zoom-level='0'] .fc-edge-label.is-dot-only {
+  display: none;
+}
+
+.fc-canvas[data-zoom-level='2'] .fc-summary {
+  display: -webkit-box;
+}
+
+.fc-canvas[data-zoom-level='2'] .fc-node[data-has-details='false'] .fc-marker {
+  display: none;
+}
+
+/*
+ * 分岐の要約は、拡大時に菱形の横（線のない側）に出す（core/decisionCaption.ts と同じ寸法）。
+ * 両側とも使えないときだけ菱形の中に出し、文字が菱形からはみ出さないよう菱形ごと縦に大きくする
+ * （中央に置いた幅 w・高さ h の文字が幅 W・高さ H の菱形に収まる条件は w/W + h/H ≤ 1）
+ */
+.fc-caption {
+  position: absolute;
+  top: 50%;
+  width: 168px;
+  margin: 0;
+  transform: translateY(-50%);
+}
+
+.fc-caption.is-right {
+  left: calc(100% + 10px);
+  text-align: left;
+}
+
+.fc-caption.is-left {
+  right: calc(100% + 10px);
+  text-align: right;
+}
+
+.fc-node.kind-decision .fc-content .fc-summary {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.fc-canvas[data-zoom-level='2'] .fc-node.kind-decision[data-caption='inside'] .fc-shape {
+  padding: 46px 50px;
+}
+
+/* ───────── グループの枠（ノードと矢印の背面。名前の部分だけ操作できる） ───────── */
+.fc-canvas .react-flow__viewport-portal {
+  z-index: -1;
+  pointer-events: none;
+}
+
+.fc-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1.5px solid var(--frame-border);
+  border-radius: 14px;
+  background: var(--frame-bg);
+  pointer-events: none;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.fc-frame.is-selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.fc-frame.is-drop-target {
+  border-color: var(--accent);
+  border-style: dashed;
+  background: var(--accent-soft);
+}
+
+.fc-frame-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--frame-label-bg);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-muted);
+  white-space: nowrap;
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.fc-mode-edit .fc-frame-label {
+  cursor: grab;
+}
+
+.fc-mode-edit .fc-frame-label:active {
+  cursor: grabbing;
+}
+
+.fc-frame-label:hover,
+.fc-frame-label.is-selected {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.fc-frame-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-frame-title.is-empty {
+  font-weight: 400;
+}
+
+.fc-frame-summary {
+  display: none;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.fc-frame-label .fc-title-editor {
+  min-width: 160px;
+}
+
+.fc-frame-label .fc-title-input {
+  text-align: left;
+  font-size: 13px;
+}
+
+.fc-canvas[data-zoom-level='2'] .fc-frame-summary {
+  display: inline;
+}
+
+.fc-canvas[data-zoom-level='2'] .fc-frame-label[data-has-description='false'] .fc-marker-inline {
+  display: none;
+}
+
+/* 俯瞰ではグループの名前がいちばん目立つように */
+.fc-canvas[data-zoom-level='0'] .fc-frame-label {
+  font-size: 18px;
+  color: var(--text);
+}
+
+.fc-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.fc-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ───────── インライン編集 ───────── */
+.fc-title-editor {
+  position: relative;
+}
+
+.fc-title-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 0;
+}
+
+.fc-counter {
+  position: absolute;
+  right: -6px;
+  bottom: -26px;
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.fc-counter.is-over {
+  color: var(--warn);
+  border-color: var(--warn);
+}
+
+/* ───────── エッジラベル ───────── */
+.fc-edge-label {
+  position: absolute;
+  pointer-events: all;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.fc-edge-label.is-dot-only {
+  padding: 4px;
+}
+
+.fc-edge-label.is-selected {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ───────── ツールチップ ───────── */
+.fc-tooltip {
+  position: fixed;
+  z-index: 50;
+  max-width: 280px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: var(--tooltip-bg);
+  color: var(--tooltip-text);
+  font-size: 12px;
+  line-height: 1.5;
+  pointer-events: none;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  animation: fc-fade-in 120ms ease;
+}
+
+@keyframes fc-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ───────── パネル（選択時のみ右から） ───────── */
+/* 右上のバー（フロー名・保存状態・一覧）を隠さないよう、その下から始める */
+.fc-panel {
+  position: absolute;
+  top: 58px;
+  right: 12px;
+  bottom: 12px;
+  width: 340px;
+  max-width: calc(100% - 24px);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  animation: fc-slide-in 140ms ease;
+}
+
+@keyframes fc-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fc-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 10px 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.fc-panel-header .fc-spacer {
+  flex: 1;
+}
+
+.fc-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.fc-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.fc-icon-button:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.fc-icon-button:focus-visible,
+.fc-text-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.fc-icon-button.is-active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.fc-icon-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.fc-text-button {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.fc-text-button:hover {
+  background: var(--surface-2);
+}
+
+.fc-text-button.is-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.fc-text-button.is-quiet {
+  border-color: transparent;
+  color: var(--text-muted);
+  background: transparent;
+}
+
+.fc-text-button.is-quiet:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+
+.fc-text-button.is-danger {
+  color: var(--danger);
+}
+
+/* ───────── 読み取り専用の詳細 ───────── */
+.fc-view-title {
+  font-size: 18px;
+  margin: 8px 0 6px;
+  overflow-wrap: anywhere;
+}
+
+.fc-view-summary {
+  margin: 0 0 16px;
+  color: var(--text);
+}
+
+.fc-view-section {
+  margin-top: 16px;
+}
+
+.fc-view-section h3 {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.fc-view-section p {
+  margin: 0;
+}
+
+.fc-pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.fc-kind-chip {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text-muted);
+}
+
+.fc-muted {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.fc-links {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.fc-members {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.fc-links a {
+  color: var(--accent);
+  overflow-wrap: anywhere;
+}
+
+.fc-link-disabled {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+/* ───────── 画面上部の最小 UI ───────── */
+.fc-topbar {
+  position: absolute;
+  top: 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.fc-topbar.is-left {
+  left: 12px;
+}
+
+.fc-topbar.is-right {
+  right: 12px;
+  padding: 3px 10px;
+  gap: 8px;
+  max-width: calc(100% - 220px);
+}
+
+.fc-flow-title {
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  padding: 4px 2px;
+  min-width: 0;
+  width: 220px;
+  max-width: 100%;
+  outline: none;
+  text-overflow: ellipsis;
+}
+
+.fc-flow-title:focus {
+  box-shadow: inset 0 -1.5px 0 var(--accent);
+}
+
+.fc-save-state {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.fc-save-state[data-save-state='error'] {
+  color: var(--danger);
+}
+
+.fc-empty-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  color: var(--text-muted);
+  pointer-events: none;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.fc-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 30;
+  min-width: 200px;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.fc-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.fc-menu-item:hover,
+.fc-menu-item:focus-visible {
+  background: var(--surface-2);
+  outline: none;
+}
+
+.fc-menu-item .fc-kbd {
+  margin-left: auto;
+}
+
+.fc-menu-sep {
+  height: 1px;
+  margin: 4px 6px;
+  background: var(--border);
+}
+
+.fc-menu-hint {
+  padding: 4px 10px 2px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.fc-kind-icon {
+  display: inline-block;
+  width: 18px;
+  height: 12px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 3px;
+}
+
+.fc-kind-icon.kind-start {
+  border-radius: 999px;
+}
+
+.fc-kind-icon.kind-end {
+  border-radius: 999px;
+  border-width: 2.5px;
+}
+
+.fc-kind-icon.kind-decision {
+  width: 11px;
+  height: 11px;
+  margin: 0 3.5px;
+  transform: rotate(45deg);
+  border-radius: 1px;
+}
+
+.fc-kbd {
+  font-size: 11px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  padding: 0 5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
+
+/* ───────── トースト・ダイアログ ───────── */
+.fc-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 32px);
+  padding: 8px 8px 8px 14px;
+  border-radius: 10px;
+  background: var(--tooltip-bg);
+  color: var(--tooltip-text);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+}
+
+.fc-toast.is-error {
+  background: var(--danger);
+  color: #fff;
+}
+
+.fc-toast button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  opacity: 0.8;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.fc-dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.32);
+}
+
+.fc-dialog {
+  width: min(460px, calc(100% - 32px));
+  max-height: calc(100% - 48px);
+  overflow-y: auto;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.fc-dialog h2 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.fc-dialog table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.fc-dialog td {
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.fc-dialog td:first-child {
+  width: 150px;
+  white-space: nowrap;
+}
+
+.fc-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

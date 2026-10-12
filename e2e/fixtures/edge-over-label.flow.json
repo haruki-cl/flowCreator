@@ -1,0 +1,17 @@
+{
+  "format": "flowcreator",
+  "schemaVersion": 2,
+  "id": "fixture-edge-over-label",
+  "title": "枠の名前の上を矢印が通る",
+  "createdAt": "2026-10-01T00:00:00.000Z",
+  "updatedAt": "2026-10-01T00:00:00.000Z",
+  "settings": { "direction": "TB" },
+  "nodes": [
+    { "id": "a", "kind": "process", "title": "メンバー1", "groupId": "g1", "position": { "x": 0, "y": 0 } },
+    { "id": "b", "kind": "process", "title": "メンバー2", "groupId": "g1", "position": { "x": 0, "y": 120 } },
+    { "id": "l", "kind": "process", "title": "左", "position": { "x": -320, "y": -41 } },
+    { "id": "r", "kind": "process", "title": "右", "position": { "x": 320, "y": -41 } }
+  ],
+  "edges": [{ "id": "e1", "source": "l", "target": "r" }],
+  "groups": [{ "id": "g1", "title": "承認" }]
+}

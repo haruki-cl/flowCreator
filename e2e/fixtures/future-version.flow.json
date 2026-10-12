@@ -1,0 +1,77 @@
+{
+  "format": "flowcreator",
+  "schemaVersion": 3,
+  "id": "fixture-small",
+  "title": "小さいフロー",
+  "createdAt": "2026-10-01T00:00:00.000Z",
+  "updatedAt": "2026-10-01T00:00:00.000Z",
+  "settings": {
+    "direction": "TB"
+  },
+  "nodes": [
+    {
+      "id": "a",
+      "kind": "start",
+      "title": "受付",
+      "position": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "id": "b",
+      "kind": "process",
+      "title": "内容を確認",
+      "summary": "申請内容と添付書類を確認する",
+      "details": {
+        "description": "不足があれば差し戻す。",
+        "owner": "窓口担当"
+      },
+      "position": {
+        "x": 0,
+        "y": 120
+      }
+    },
+    {
+      "id": "c",
+      "kind": "process",
+      "title": "記録する",
+      "position": {
+        "x": 0,
+        "y": 240
+      }
+    },
+    {
+      "id": "d",
+      "kind": "end",
+      "title": "完了",
+      "details": {
+        "notes": "メモだけある"
+      },
+      "position": {
+        "x": 0,
+        "y": 360
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "a",
+      "target": "b"
+    },
+    {
+      "id": "e2",
+      "source": "b",
+      "target": "c",
+      "label": "OK",
+      "detail": "確認できたら次へ\n二行目"
+    },
+    {
+      "id": "e3",
+      "source": "c",
+      "target": "d"
+    }
+  ],
+  "groups": []
+}

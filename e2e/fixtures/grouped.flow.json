@@ -1,0 +1,86 @@
+{
+  "format": "flowcreator",
+  "schemaVersion": 2,
+  "id": "fixture-grouped",
+  "title": "グループ付きフロー",
+  "createdAt": "2026-10-01T00:00:00.000Z",
+  "updatedAt": "2026-10-01T00:00:00.000Z",
+  "settings": {
+    "direction": "TB"
+  },
+  "nodes": [
+    {
+      "id": "a",
+      "kind": "start",
+      "title": "受付",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "groupId": "g1"
+    },
+    {
+      "id": "b",
+      "kind": "process",
+      "title": "内容を確認",
+      "summary": "申請内容と添付書類を確認する",
+      "details": {
+        "description": "不足があれば差し戻す。",
+        "owner": "窓口担当"
+      },
+      "position": {
+        "x": 0,
+        "y": 120
+      },
+      "groupId": "g1"
+    },
+    {
+      "id": "c",
+      "kind": "process",
+      "title": "記録する",
+      "position": {
+        "x": 0,
+        "y": 240
+      }
+    },
+    {
+      "id": "d",
+      "kind": "end",
+      "title": "完了",
+      "details": {
+        "notes": "メモだけある"
+      },
+      "position": {
+        "x": 0,
+        "y": 360
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "source": "a",
+      "target": "b"
+    },
+    {
+      "id": "e2",
+      "source": "b",
+      "target": "c",
+      "label": "OK",
+      "detail": "確認できたら次へ\n二行目"
+    },
+    {
+      "id": "e3",
+      "source": "c",
+      "target": "d"
+    }
+  ],
+  "groups": [
+    {
+      "id": "g1",
+      "title": "受付フェーズ",
+      "summary": "窓口で受け付けて内容を確かめる",
+      "description": "受付は平日 9〜17 時。"
+    }
+  ]
+}

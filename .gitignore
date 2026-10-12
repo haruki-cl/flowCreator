@@ -1,0 +1,17 @@
+node_modules
+dist
+build
+test-results
+playwright-report
+*.tsbuildinfo
+.DS_Store
+
+# フローの保存先。業務内容や個人情報を含むので、リポジトリには絶対に入れない
+flows
+# 書き出したフロー（JSON）がプロジェクト直下に置かれた場合も入れない（テスト用の e2e/fixtures は対象外）
+/*.flow.json
+
+# ローカルの設定・秘密情報
+.env
+.env.*
+.claude/settings.local.json

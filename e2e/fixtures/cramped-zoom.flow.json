@@ -1,0 +1,78 @@
+{
+  "format": "flowcreator",
+  "schemaVersion": 2,
+  "id": "fixture-cramped-zoom",
+  "title": "拡大すると詰まるフロー",
+  "createdAt": "2026-10-01T00:00:00.000Z",
+  "updatedAt": "2026-10-01T00:00:00.000Z",
+  "settings": {
+    "direction": "TB"
+  },
+  "nodes": [
+    {
+      "id": "q",
+      "kind": "decision",
+      "title": "担当者が対応できる？",
+      "summary": "基本講座の講師を社内の担当者が務められるかを確認する",
+      "position": {
+        "x": 100,
+        "y": 0
+      }
+    },
+    {
+      "id": "a",
+      "kind": "process",
+      "title": "基本講座（社内講師）",
+      "summary": "座学と演習を別の担当者が代行する",
+      "position": {
+        "x": -40,
+        "y": 130
+      }
+    },
+    {
+      "id": "b",
+      "kind": "process",
+      "title": "基本講座（外部講師）",
+      "summary": "座学と演習を外部の講師がまとめて担当する",
+      "position": {
+        "x": 230,
+        "y": 130
+      }
+    },
+    {
+      "id": "h",
+      "kind": "process",
+      "title": "演習",
+      "summary": "小さなアプリを作って操作に慣れる",
+      "position": {
+        "x": 100,
+        "y": 250
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "no",
+      "source": "q",
+      "target": "a",
+      "label": "No"
+    },
+    {
+      "id": "yes",
+      "source": "q",
+      "target": "b",
+      "label": "Yes"
+    },
+    {
+      "id": "ah",
+      "source": "a",
+      "target": "h"
+    },
+    {
+      "id": "bh",
+      "source": "b",
+      "target": "h"
+    }
+  ],
+  "groups": []
+}

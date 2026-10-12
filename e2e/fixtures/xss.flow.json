@@ -1,0 +1,20 @@
+{
+  "format": "flowcreator",
+  "schemaVersion": 1,
+  "id": "fixture-xss",
+  "title": "</script><script>window.pwned=1</script>",
+  "createdAt": "2026-10-01T00:00:00.000Z",
+  "updatedAt": "2026-10-01T00:00:00.000Z",
+  "settings": { "direction": "TB" },
+  "nodes": [
+    {
+      "id": "x",
+      "kind": "process",
+      "title": "<img src=x onerror=\"window.pwned=2\">",
+      "summary": "$& $1 </script>",
+      "details": { "links": [{ "label": "危険なリンク", "url": "javascript:window.pwned=3" }, { "label": "安全なリンク", "url": "https://example.com/" }] },
+      "position": { "x": 0, "y": 0 }
+    }
+  ],
+  "edges": []
+}

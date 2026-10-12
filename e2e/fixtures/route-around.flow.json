@@ -1,0 +1,16 @@
+{
+  "format": "flowcreator",
+  "schemaVersion": 2,
+  "id": "fixture-route-around",
+  "title": "途中にノードがある線",
+  "createdAt": "2026-10-01T00:00:00.000Z",
+  "updatedAt": "2026-10-01T00:00:00.000Z",
+  "settings": { "direction": "TB" },
+  "nodes": [
+    { "id": "a", "kind": "process", "title": "上", "position": { "x": 0, "y": 0 } },
+    { "id": "c", "kind": "process", "title": "じゃまなノード", "position": { "x": 0, "y": 150 } },
+    { "id": "b", "kind": "process", "title": "下", "position": { "x": 0, "y": 300 } }
+  ],
+  "edges": [{ "id": "e1", "source": "a", "target": "b", "label": "通過" }],
+  "groups": []
+}

@@ -1,0 +1,22 @@
+.fc-viewer-title {
+  gap: 12px;
+  padding: 6px 12px;
+  max-width: calc(100% - 24px);
+}
+
+.fc-viewer-title strong {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-viewer-hint {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .fc-viewer-hint {
+    display: none;
+  }
+}
