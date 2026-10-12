@@ -25,6 +25,11 @@ npm run dev      # http://localhost:5173
 
 初めての場合は「…」→「サンプルを開く」で例を表示できます。`?` キーで操作の一覧が出ます。
 
+**インストールせずに試す:** 公開版（GitHub Pages）は https://haruki-cl.github.io/flowCreator/ です。公開版は次の点が手元で動かす版と違います。
+- フローは、そのブラウザの中（IndexedDB）にだけ保存します。サーバーやリポジトリには何も送りません。
+- フォルダへの保存と、Claude Code のターミナルはありません。
+- ほかのブラウザや端末からは見えないので、残したいフローは JSON で書き出してください。
+
 | 操作 | 動作 |
 |---|---|
 | 空白をダブルクリック | ノードを追加して見出しを入力 |
@@ -96,6 +101,7 @@ npm run flow -- new "<フロー名>"     # 空のフローを作る
 
 ```bash
 npm run build    # 閲覧用テンプレート → 型チェック → エディタの順にビルド
+npm run build:pages  # GitHub Pages 用（/flowCreator/ 配下・ブラウザ内保存のみ）。main に push すると Actions が公開する
 npm test         # 単体テスト（Vitest）
 npm run e2e      # E2E テスト（Playwright。インストール済みの Google Chrome を使う）
                  # 通常はブラウザ内保存のサーバー（:4173）、ファイル保存のテストだけ一時フォルダに保存する開発サーバー（:4174）で動かす

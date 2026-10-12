@@ -7,6 +7,7 @@
     "build:viewer": "vite build -c vite.viewer.config.ts",
     "dev": "npm run build:viewer && vite",
     "build": "npm run build:viewer && tsc -b && vite build",
+    "build:pages": "npm run build:viewer && tsc -b && VITE_STATIC_SITE=1 vite build --base=/flowCreator/",
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "test": "vitest run",

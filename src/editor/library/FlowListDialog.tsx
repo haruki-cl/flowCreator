@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { createDocument } from '../../core/factory';
 import { TrashIcon } from '../../shared/ui/icons';
 import { useUi } from '../../shared/ui/uiStore';
-import type { FlowSummary } from '../persistence/repository';
+import { STATIC_SITE, type FlowSummary } from '../persistence/repository';
 import { flushPending, getRepository, onFlowsChanged, switchDocument } from '../persistence/session';
 import { useDoc } from '../store/docStore';
 
@@ -103,6 +103,8 @@ export function FlowListDialog({ onOpened }: { onOpened: () => void }) {
             <>
               自動で JSON ファイルとして保存しています: <code className="fc-path">{repository.location}</code>
             </>
+          ) : STATIC_SITE ? (
+            <>このブラウザの中に自動で保存しています。ほかのブラウザや端末からは見えないので、残したいフローは「…」→「JSON を書き出す」で保存してください。</>
           ) : (
             <>このブラウザの中に自動で保存しています（npm run dev で起動すると flows/ フォルダに保存されます）。</>
           )}

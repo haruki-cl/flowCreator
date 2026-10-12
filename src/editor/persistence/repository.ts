@@ -78,8 +78,15 @@ export function fileRepository(location: string, base = ''): FlowRepository {
   };
 }
 
+/**
+ * GitHub Pages など、静的に配信する版（VITE_STATIC_SITE=1 でビルド）。
+ * フォルダへの保存はできないので、ファイル保存の API を探しに行かず、最初からブラウザ内に保存する
+ */
+export const STATIC_SITE = import.meta.env.VITE_STATIC_SITE === '1';
+
 /** ファイル保存の API があればそれを、なければブラウザ内の保存を使う */
 export async function detectRepository(storage: StorageAdapter, base = ''): Promise<FlowRepository> {
+  if (STATIC_SITE) return browserRepository(storage);
   try {
     const res = await fetch(`${base}/api/flows`, { signal: AbortSignal.timeout(3000) });
     if (res.ok) {
