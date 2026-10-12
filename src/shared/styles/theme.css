@@ -956,6 +956,12 @@ select {
   color: #fff;
 }
 
+/* 暗い配色では --warn が明るいので、文字は背景色側にする */
+.fc-toast.is-warning {
+  background: var(--warn);
+  color: var(--surface);
+}
+
 .fc-toast button {
   border: none;
   background: transparent;

@@ -1,5 +1,7 @@
 import { newId } from '../../core/factory';
 import type { FlowDocument } from '../../core/model';
+import type { ParseResult } from '../../core/schema';
+import { decodeSharePayload, readShareHash } from '../../core/shareLink';
 import { toDocument } from '../../core/serialize';
 import { useUi } from '../../shared/ui/uiStore';
 import { useDoc } from '../store/docStore';
@@ -26,19 +28,44 @@ export function attachAutosave(autosave: Autosave | null): void {
   active = autosave;
 }
 
-let initializing: Promise<{ doc: FlowDocument | null; migrated: number }> | null = null;
+export type InitResult = {
+  doc: FlowDocument | null;
+  migrated: number;
+  /** 共有リンクから開いたときの結果（共有リンクでなければ null） */
+  shared: ParseResult | null;
+};
+
+let initializing: Promise<InitResult> | null = null;
 
 /**
  * 起動時: 保存先を決め、ブラウザ内の古いフローをファイルへ移し、最初に開くフローを読む。
+ * 共有リンクから開いたときは、そのフローを新しいフローとして保存して開く（壊れていればいつものフローを開く）。
  * 開発時の React（StrictMode）は起動処理を 2 回呼ぶので、2 回目以降は 1 回目の結果を返す
  */
-export function initSession(): Promise<{ doc: FlowDocument | null; migrated: number }> {
+export function initSession(): Promise<InitResult> {
   initializing ??= (async () => {
     repository = await detectRepository(idbStorage);
     const migrated = repository.kind === 'files' ? await migrateBrowserFlows(idbStorage, repository) : 0;
-    return { doc: await loadInitialDocument(repository, idbStorage), migrated };
+    const shared = await takeSharedLink();
+    if (shared?.ok) {
+      await persist(shared.doc);
+      return { doc: shared.doc, migrated, shared };
+    }
+    return { doc: await loadInitialDocument(repository, idbStorage), migrated, shared };
   })();
   return initializing;
+}
+
+/**
+ * URL の # に共有リンクの中身があれば取り出し、URL からは消す
+ * （再読み込みで同じフローが増えないように。アドレスバーに長い URL を残さないように）。
+ * 共有リンクでなければ null
+ */
+export async function takeSharedLink(): Promise<ParseResult | null> {
+  const payload = readShareHash(location.hash);
+  if (payload === null) return null;
+  history.replaceState(history.state, '', location.pathname + location.search);
+  return decodeSharePayload(payload);
 }
 
 /** 自動保存から呼ばれる。保存先へ書き、最後に開いたフローとして覚える */

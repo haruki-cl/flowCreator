@@ -17,8 +17,9 @@ export default defineConfig({
   // サーバーは配列の順に 1 つずつ起動される（2 つ目は 1 つ目のビルド結果を使う）
   webServer: [
     {
-      // 通常のテスト: ブラウザ内保存（テストごとにブラウザのデータが分かれるので、互いに干渉しない）
-      command: 'npm run build && FLOWCREATOR_STORAGE=browser npx vite preview --port 4173 --strictPort',
+      // 通常のテスト: ブラウザ内保存（テストごとにブラウザのデータが分かれるので、互いに干渉しない）。
+      // 共有リンクは公開版ではなく、このサーバーを指すようにする
+      command: 'VITE_PUBLIC_URL=http://localhost:4173/ npm run build && FLOWCREATOR_STORAGE=browser npx vite preview --port 4173 --strictPort',
       url: 'http://localhost:4173',
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,

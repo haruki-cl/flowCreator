@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { ReactFlowProvider } from '@xyflow/react';
 import { createDocument } from '../core/factory';
 import type { FlowDocument } from '../core/model';
+import type { ParseResult } from '../core/schema';
 import { createSampleDocument } from '../core/sample';
 import { TooltipLayer } from '../shared/flow/TooltipLayer';
 import { ToastView } from '../shared/ui/Toast';
@@ -10,10 +11,20 @@ import { useUi, type SaveState } from '../shared/ui/uiStore';
 import { EditorCanvas, useCanvasActions } from './canvas/EditorCanvas';
 import { ShortcutsDialog } from './help/ShortcutsDialog';
 import { exportJson, exportViewerHtml, readFlowFile } from './io/fileIo';
+import { copyShareLink } from './io/shareLink';
+import { ShareLinkDialog } from './io/ShareLinkDialog';
 import { FlowListDialog } from './library/FlowListDialog';
 import { DetailPanel } from './panel/DetailPanel';
 import { startAutosave } from './persistence/autosave';
-import { asNewDocument, attachAutosave, handleExternalChange, initSession, persist, switchDocument } from './persistence/session';
+import {
+  asNewDocument,
+  attachAutosave,
+  handleExternalChange,
+  initSession,
+  persist,
+  switchDocument,
+  takeSharedLink,
+} from './persistence/session';
 import { useDoc } from './store/docStore';
 import { terminalToken } from './terminal/terminalToken';
 
@@ -23,6 +34,14 @@ import { Toolbar } from './toolbar/Toolbar';
 
 /** ターミナル（Claude Code）は開発サーバーで開いたときだけ使える */
 const TERMINAL_TOKEN = terminalToken();
+
+const SHARED_OPENED = '共有リンクのフローを開きました（このブラウザに保存されます）';
+
+/** 共有リンクを開けたか知らせる（開けなかったときは、いつものフローのまま） */
+function notifyShared(shared: ParseResult): void {
+  if (shared.ok) useUi.getState().showToast(SHARED_OPENED);
+  else useUi.getState().showToast(`共有リンクを開けませんでした: ${shared.error}`, 'error');
+}
 
 const SAVE_LABELS: Record<SaveState, string> = {
   idle: '',
@@ -117,6 +136,22 @@ function Editor() {
     useUi.getState().showToast(`「${result.doc.title}」を読み込みました`);
   };
 
+  // 開いている画面のアドレスバーに共有リンクを貼ったとき（# 以降だけが変わるので、ページは読み込み直されない）
+  useEffect(() => {
+    const onHashChange = async () => {
+      const shared = await takeSharedLink();
+      if (!shared) return;
+      if (shared.ok) {
+        await switchDocument(shared.doc, 'new');
+        requestAnimationFrame(() => fit(0));
+      }
+      notifyShared(shared);
+    };
+    const listener = () => void onHashChange();
+    window.addEventListener('hashchange', listener);
+    return () => window.removeEventListener('hashchange', listener);
+  }, [fit]);
+
   const addAtCenter = (kind: Parameters<typeof addAtScreenPoint>[0]) => {
     addAtScreenPoint(kind, { x: window.innerWidth / 2, y: window.innerHeight / 2 });
   };
@@ -139,6 +174,12 @@ function Editor() {
             { label: '新しいフロー', onSelect: () => void openAsNew(createDocument()), testId: 'menu-new' },
             { label: 'サンプルを開く', onSelect: () => void openAsNew(createSampleDocument()), testId: 'menu-sample' },
             'separator',
+            {
+              label: '共有リンクをコピー',
+              testId: 'menu-share-link',
+              onSelect: () =>
+                void copyShareLink().catch(() => useUi.getState().showToast('共有リンクを作れませんでした', 'error')),
+            },
             { label: 'JSON を書き出す', onSelect: exportJson, testId: 'menu-export-json' },
             { label: 'JSON を読み込む…', onSelect: () => fileInput.current?.click(), testId: 'menu-import-json' },
             {
@@ -164,6 +205,7 @@ function Editor() {
       <ToastView />
       <ShortcutsDialog />
       <FlowListDialog onOpened={fitAfterOpen} />
+      <ShareLinkDialog />
       <input
         ref={fileInput}
         type="file"
@@ -185,10 +227,11 @@ export function App() {
   useEffect(() => {
     let cancelled = false;
     initSession()
-      .then(({ doc, migrated }) => {
+      .then(({ doc, migrated, shared }) => {
         if (cancelled) return;
         if (doc) useDoc.getState().loadDocument(doc);
         if (migrated > 0) useUi.getState().showToast(`ブラウザ内に保存していた ${migrated} 件のフローをファイルにコピーしました`);
+        if (shared) notifyShared(shared);
       })
       .catch((error: unknown) => {
         console.error('[flowCreator] 起動時の読み込みに失敗しました', error);
